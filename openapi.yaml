@@ -1,0 +1,126 @@
+openapi: '3.0.0'
+info:
+  title: FeedMe
+  description: 'service to manage RSS/ATOM'
+  version: '1.0.0'
+  contact:
+    name: 'Prince Cuberdon'
+    email: princecuberdon@bandcochon.fr
+
+servers:
+  - url: 'http://localhost:3000/v1'
+    description: 'Development server'
+  - url: 'https://staging.bandcochon.fr/v1'
+    description: 'Test server'
+  - url: 'https://api.bandcochon.re/v1'
+    description: 'Production server'
+
+security:
+  - feedme_auth:
+      - bandcochon:feedme:create
+      - bandcochon:feedme:read
+      - bandcochon:feedme:delete
+paths:
+  /feedme:
+    post:
+      security:
+        - feedme_auth:
+            - bandcochon:admin
+            - bandcochon:feedme:create
+      description: 'Create a new feed'
+      requestBody:
+        $ref: '#/components/requestBodies/FeedCreation'
+      responses:
+        '201':
+          description: 'The feed is created and push into the database'
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/FeedCreation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/NotAuthenticated'
+        '403':
+          $ref: '#/components/responses/NotAuthorized'
+    get:
+      parameters:
+        - in: query
+          required: false
+          name: rss
+          allowEmptyValue: true
+        - in: query
+          required: false
+          name: atom
+          allowEmptyValue: true
+      security:
+        - feedme_auth:
+            - bandcochon:admin
+            - bandcochon:feedme:read
+      description: 'Read all feeds'
+      responses:
+        '200':
+          description: 'Get the daily feed'
+          content:
+            'application/xml':
+              schema:
+                $ref: '#/components/responses/RssResponse'
+components:
+  requestBodies:
+    FeedCreation:
+      description: ''
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemes/FeedCreation'
+  responses:
+    BadRequest:
+      description: 'Bad request'
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/BadRequest'
+
+    NotAuthorized:
+      description: 'The requester is not allowed to post on this url'
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/NotAllowed'
+
+  schemas:
+    FeedCreation:
+      type: object
+      required:
+        - guid
+        - creation_date
+        - link
+        - title
+        - description
+      properties:
+        guid:
+          type: string
+          format: uuid
+        creation_date:
+          type: string
+          format: date-time
+        link:
+          type: string
+          format: url
+        title:
+          type: string
+        description:
+          type: string
+
+  securitySchemes:
+    feedme_auth:
+      type: oauth2
+      description: OAuth2 protection
+      flows:
+        clientCredentials:
+          authorizationUrl: 'https://account.bandcochon.fr/oauth2/authorize'
+          scopes:
+            bandcochon_admin: The bandcochon root administrator
+            bandcochon:feedme:create: Create a feed
+            bandcochon:feedme:read: Read a feed
+            bandcochon:feedme:delete: Delete a feed

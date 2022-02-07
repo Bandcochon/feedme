@@ -1,0 +1,10 @@
+FROM node:16 AS build-env
+COPY . /app
+WORKDIR /app
+
+RUN npm ci --only=production
+
+FROM node:16
+WORKDIR /app
+COPY --from=build-env /app .
+CMD ["npm", "start", "test-features"]
