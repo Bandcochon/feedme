@@ -4,9 +4,17 @@ services:
     build: .
     ports:
       - "3000:3000"
+    depends_on:
+      - mongo
 
-  # features:
-  #   build:
-  #     dockerfile: Dockerfile-feature
-  #   depends_on:
-  #     - feedme
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  mongoexpress:
+    image: mongo-express
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongo
