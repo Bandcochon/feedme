@@ -30,12 +30,11 @@ jobs:
         with:
           node-version: '17.3.x'
           
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       
       - name: Install packages
         run: npm install
 
       - name: Run unittests
-        run: npm run tests
-      
+        run: npm test
+
