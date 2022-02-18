@@ -15,6 +15,11 @@ class FeedMeDomain {
         await this.service.connect();
         return await this.service.getAllFeeds();
     }
+
+    async delete(guid) {
+        await this.service.connect();
+        return await this.service.delete();
+    }
 }
 
 module.exports = {

@@ -61,7 +61,7 @@ Feature: RSS/Atom Feed
           <title>this is a title</title>
           <link href="https://this.is.a.path/"/>
           <id>urn:96bea7ed-027f-4987-abc8-b506d9825c8e</id>
-          <updated>Sun, 17 Oct 2021 19:37:41 GMT</updated>
+          <updated>Sun, 17 Oct 2021 17:37:41 GMT</updated>
           <summary>This is a content</summary>
           <content type="xhtml">
             <div xmlns="http://www.w3.org/1999/xhtml">This is a content</div>
@@ -90,14 +90,13 @@ Feature: RSS/Atom Feed
               <item>
                   <title>this is a title</title>
                   <description>This is a content</description>
-                  <pubDate>Sun, 17 oct 2021 19:37:41 GMT</pubDate>
+                  <pubDate>Sun, 17 Oct 2021 17:37:41 GMT</pubDate>
                   <link>https://this.is.a.path/</link>
-                  <guid>96bea7ed-027f-4987-abc8-b506d9825c8f</guid>
               </item>
           </channel>
       </rss>
       """
-    And the content type is "application/rss+xml"
+    And the content type is "application/rss+xml; charset=utf-8"
 
   Scenario: Call feed with a parameter address will return a well formatted xml in ATOM format
     Given A bunch of content into the database like those
@@ -107,28 +106,43 @@ Feature: RSS/Atom Feed
     Then it returns something like
       """
       <?xml version="1.0" encoding="UTF-8"?>
-      <rss version="2.0">
-          <channel>
-              <title>Mon site</title>
-              <description>Ceci est un exemple de flux RSS 2.0</description>
-              <lastBuildDate>Sun, 17 Sep 2021 19:37:41 GMT</lastBuildDate>
-              <link>https://this.is.a.link"</link>
-              <item>
-                  <title>this is a title</title>
-                  <description>This is a content</description>
-                  <pubDate>Sun, 17 Sep 2021 19:37:41 GMT</pubDate>
-                  <link>https://this.is.a.path/</link>
-                  <guid>96bea7ed-027f-4987-abc8-b506d9825c8f</guid>
-              </item>
-          </channel>
-      </rss>
+      <feed xmlns="http://www.w3.org/2005/Atom">
+        <title>La traque au cochon</title>
+        <subtitle>Bandcochon - Ne na cosson a la renyon ! </subtitle>
+        <updated>{{now}}</updated>
+        <id>urn:ef62fa15-cb7e-416d-b116-cacb7204bc02</id>
+        <link rel="alternate" type="text/html" href="https://bandcochon.re/feeds"/>
+        <link rel="self" type="application/atom+xml" href="https://feed.link/another_one"/>
+        <summary>Bandcochon - Ne na cosson a la renyon ! </summary>
+        <entry>
+          <title>this is a title</title>
+          <link href="https://this.is.a.path/"/>
+          <id>urn:96bea7ed-027f-4987-abc8-b506d9825c8f</id>
+          <updated>Sun, 17 Oct 2021 17:37:41 GMT</updated>
+          <summary>This is a content</summary>
+          <content type="xhtml">
+            <div xmlns="http://www.w3.org/1999/xhtml">This is a content</div>
+          </content>
+          <author>
+            <name>princecuberdon</name>
+          </author>
+        </entry>
+      </feed>
       """
-    And the content type is "application/atom+xml"
+    And the content type is "application/atom+xml; charset=utf-8"
 
   Scenario: Deleting an entry
     Given A bunch of content into the database like those
       | guid                                 | creation_date       | title           | description       | link                    | username       |
       | 96bea7ed-027f-4987-abc8-b506d9825c8f | 2021-10-17T19:37:41 | this is a title | This is a content | https://this.is.a.path/ | princecuberdon |
-    When the route "/v1/feedme" is called with "DELETE" method
+    When the route "/v1/feedme/96bea7ed-027f-4987-abc8-b506d9825c8f" is called with "DELETE" method
+    Then it returns a "204" status code
+    And the entry doesn't exist into the database anymore
+
+  Scenario: Deleting a non exiting entry
+    Given A guid that doesn't exists into the database A bunch of content into the database like those
+      | guid                                 |
+      | 96bea7ed-027f-4987-abc8-b506d9825c8e |
+    When the route "/v1/feedme/96bea7ed-027f-4987-abc8-b506d9825c8e" is called with "DELETE" method
     Then it returns a "204" status code
     And the entry doesn't exist into the database anymore

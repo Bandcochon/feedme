@@ -6,6 +6,7 @@ const moment = require("moment");
 
 assert.notUndefined = (a) => assert.notStrictEqual(a, undefined);
 assert.notNull = (a, b) => assert.notStrictEqual(a, null, !b ? null : b);
+assert.null = (a) => assert.strictEqual(a, null);
 
 const mongo = {
     host: 'localhost',
@@ -154,11 +155,20 @@ Then("the route {string} is called with the GET method with format={string} as p
     }
 });
 
-Then(/^the entry doesn't exist into the database anymore$/, async function () {
-    const result = await mongoClient
+async function findClientWithGuid(guid) {
+    return await mongoClient
         .db(mongo.dbName)
         .collection(mongo.collectionName)
-        .findOne({guid: world.guid});
+        .findOne({guid});
+}
 
+Then(/^the entry doesn't exist into the database anymore$/, async function () {
+    const result = findClientWithGuid(world.guid);
     assert.notNull(result);
+});
+
+Given(/^A guid that doesn't exists into the database A bunch of content into the database like those$/, async function (values) {
+    const [guid] = values.rawTable[1];
+
+    assert.null(await findClientWithGuid(guid));
 });

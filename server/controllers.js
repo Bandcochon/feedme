@@ -45,6 +45,7 @@ async function addFeed(req, resp) {
         const feedModel = new FeedModel(req.body);
         const feedDomain = new FeedMeDomain(feedService);
         const result = await feedDomain.save(feedModel);
+
         resp.status(HttpStatus.Created);
         resp.send(result.toObject());
     } catch (err) {
@@ -56,7 +57,24 @@ async function addFeed(req, resp) {
     }
 }
 
+async function deleteFeed(req, resp) {
+    try {
+        const guid = req.params.guid;
+        const feedDomain = new FeedMeDomain(feedService);
+        await feedDomain.delete(guid);
+        resp.status(HttpStatus.NoContent);
+        resp.send();
+    } catch (err) {
+        console.error(err.message);
+        resp.status(HttpStatus.NotFound);
+        resp.send({
+            error: err.message
+        });
+    }
+}
+
 module.exports = {
     addFeed,
-    getAllFeeds
+    getAllFeeds,
+    deleteFeed
 };

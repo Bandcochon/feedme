@@ -8,6 +8,10 @@ class FeedService {
     #client;
     #collection;
 
+    /**
+     *
+     * @returns {Promise<void>}
+     */
     async connect() {
         this.#client = await MongoClient.connect('mongodb://localhost:27017', {
             socketTimeoutMS: DefaultTimeout,
@@ -18,6 +22,11 @@ class FeedService {
         this.#collection = this.#client.db('feedme').collection('feedme');
     }
 
+    /**
+     *
+     * @param model
+     * @returns {Promise<null|FeedModel>}
+     */
     async save(model) {
         const guid = model.guid.getValue();
         const existingModel = await this.findByOneId(guid);
@@ -52,6 +61,10 @@ class FeedService {
         }
 
         return new FeedModel(result);
+    }
+
+    async delete(guid) {
+        this.#collection.deleteOne({guid});
     }
 }
 
