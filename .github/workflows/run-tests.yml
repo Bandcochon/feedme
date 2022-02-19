@@ -3,8 +3,13 @@ name: Test on CI
 on:
   push:
     branches: 
-      - refs/head/*
+      - 'refs/head/*'
 
+    paths-ignore:
+      - '.github/**'
+      - .gitignore
+      - .dockerignore
+      - '*.md'
 jobs:
   build:
     runs-on: ubuntu-latest

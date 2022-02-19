@@ -13,5 +13,5 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build docker image
-        run: docker build -t registry.bandcochon.fr/bandcochon/feedme . 
+        run: docker build -t registry.bandcochon.fr/bandcochon/feedme .
 
