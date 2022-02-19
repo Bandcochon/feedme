@@ -21,14 +21,14 @@ Feature: RSS/Atom Feed
     Then it returns a "201" status code
     And the database contains an entry with those values
       | guid                                 | creation_date       | title           | description       | link                    | username       |
-      | 96bea7ed-027f-4987-abc8-b506d9825c8f | 2021-10-17T19:37:41 | this is a title | This is a content | https://this.is.a.path/ | princecuberdon |
+      | 96bea7ed-027f-4987-abc8-b506d9825c8f | 2021-10-17T19:37:41Z | this is a title | This is a content | https://this.is.a.path/ | princecuberdon |
 
   Scenario: Add a non unique content
     Given A new content to add:
       """
       {
       "guid": "96bea7ed-027f-4987-abc8-b506d9825c8f",
-      "creationDate": "2021-10-17T19:37:41",
+      "creationDate": "2021-10-17T19:37:41Z",
       "webSiteLink": "https://this.is.a.path/",
       "title": "this is a title",
       "description": "This is a content",
@@ -42,7 +42,7 @@ Feature: RSS/Atom Feed
   Scenario: Call feed address will return a well formatted xml in ATOM format which is the default format
     Given A bunch of content into the database like those
       | guid                                 | creation_date       | title           | description       | link                    | username       |
-      | 96bea7ed-027f-4987-abc8-b506d9825c8e | 2021-10-17T19:37:41 | this is a title | This is a content | https://this.is.a.path/ | princecuberdon |
+      | 96bea7ed-027f-4987-abc8-b506d9825c8e | 2021-10-17T19:37:41Z | this is a title | This is a content | https://this.is.a.path/ | princecuberdon |
     When the route "/v1/feedme" is called with the GET method without additional parameters
     Then it returns a "200" status code
     And the content type is "application/atom+xml; charset=utf-8"
@@ -61,7 +61,7 @@ Feature: RSS/Atom Feed
           <title>this is a title</title>
           <link href="https://this.is.a.path/"/>
           <id>urn:96bea7ed-027f-4987-abc8-b506d9825c8e</id>
-          <updated>Sun, 17 Oct 2021 17:37:41 GMT</updated>
+          <updated>Sun, 17 Oct 2021 19:37:41 GMT</updated>
           <summary>This is a content</summary>
           <content type="xhtml">
             <div xmlns="http://www.w3.org/1999/xhtml">This is a content</div>
@@ -76,7 +76,7 @@ Feature: RSS/Atom Feed
   Scenario: Call rss with a parameter address will return a well formatted xml in RSS format
     Given A bunch of content into the database like those
       | guid                                 | creation_date       | title           | description       | link                    | username       |
-      | 96bea7ed-027f-4987-abc8-b506d9825c8f | 2021-10-17T19:37:41 | this is a title | This is a content | https://this.is.a.path/ | princecuberdon |
+      | 96bea7ed-027f-4987-abc8-b506d9825c8f | 2021-10-17T19:37:41Z | this is a title | This is a content | https://this.is.a.path/ | princecuberdon |
     When the route "/v1/feedme" is called with the GET method with format="rss" as parameter
     Then it returns something like
       """
@@ -90,7 +90,7 @@ Feature: RSS/Atom Feed
               <item>
                   <title>this is a title</title>
                   <description>This is a content</description>
-                  <pubDate>Sun, 17 Oct 2021 17:37:41 GMT</pubDate>
+                  <pubDate>Sun, 17 Oct 2021 19:37:41 GMT</pubDate>
                   <link>https://this.is.a.path/</link>
               </item>
           </channel>
@@ -101,7 +101,7 @@ Feature: RSS/Atom Feed
   Scenario: Call feed with a parameter address will return a well formatted xml in ATOM format
     Given A bunch of content into the database like those
       | guid                                 | creation_date       | title           | description       | link                    | username       |
-      | 96bea7ed-027f-4987-abc8-b506d9825c8f | 2021-10-17T19:37:41 | this is a title | This is a content | https://this.is.a.path/ | princecuberdon |
+      | 96bea7ed-027f-4987-abc8-b506d9825c8f | 2021-10-17T19:37:41Z | this is a title | This is a content | https://this.is.a.path/ | princecuberdon |
     When the route "/v1/feedme" is called with the GET method with format="atom" as parameter
     Then it returns something like
       """
@@ -118,7 +118,7 @@ Feature: RSS/Atom Feed
           <title>this is a title</title>
           <link href="https://this.is.a.path/"/>
           <id>urn:96bea7ed-027f-4987-abc8-b506d9825c8f</id>
-          <updated>Sun, 17 Oct 2021 17:37:41 GMT</updated>
+          <updated>Sun, 17 Oct 2021 19:37:41 GMT</updated>
           <summary>This is a content</summary>
           <content type="xhtml">
             <div xmlns="http://www.w3.org/1999/xhtml">This is a content</div>
@@ -134,7 +134,7 @@ Feature: RSS/Atom Feed
   Scenario: Deleting an entry
     Given A bunch of content into the database like those
       | guid                                 | creation_date       | title           | description       | link                    | username       |
-      | 96bea7ed-027f-4987-abc8-b506d9825c8f | 2021-10-17T19:37:41 | this is a title | This is a content | https://this.is.a.path/ | princecuberdon |
+      | 96bea7ed-027f-4987-abc8-b506d9825c8f | 2021-10-17T19:37:41Z | this is a title | This is a content | https://this.is.a.path/ | princecuberdon |
     When the route "/v1/feedme/96bea7ed-027f-4987-abc8-b506d9825c8f" is called with "DELETE" method
     Then it returns a "204" status code
     And the entry doesn't exist into the database anymore
