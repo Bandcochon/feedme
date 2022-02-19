@@ -4,6 +4,11 @@ services:
     build: .
     ports:
       - "3000:3000"
+    environment:
+      - HOST=0.0.0.0
+      - POST=3000
+      - DB_HOST=mongo
+      - DB_PORT=27017
     depends_on:
       - mongo
 

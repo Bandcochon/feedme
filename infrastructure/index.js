@@ -3,6 +3,8 @@ const {FeedModel} = require("../entities/values");
 const {AlreadyExistsError} = require("../exceptions");
 
 const DefaultTimeout = 100;
+const DB_HOST = process.env.DB_HOST || 'localhost';
+const DB_PORT = process.env.DB_PORT || '27012';
 
 class FeedService {
     #client;
@@ -13,7 +15,7 @@ class FeedService {
      * @returns {Promise<void>}
      */
     async connect() {
-        this.#client = await MongoClient.connect('mongodb://localhost:27017', {
+        this.#client = await MongoClient.connect(`mongodb://${DB_HOST}:${DB_PORT}/feedme`, {
             socketTimeoutMS: DefaultTimeout,
             serverSelectionTimeoutMS: DefaultTimeout,
             connectTimeoutMS: DefaultTimeout
