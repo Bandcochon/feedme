@@ -1,21 +1,9 @@
-# This is a basic workflow to help you get started with Actions
+name: Test on CI
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
   push:
     branches: 
-      - master
       - refs/head/*
-      
-  pull_request:
-    branches:
-      - master
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
 
 jobs:
   build:
@@ -32,12 +20,3 @@ jobs:
 
       - name: Run unittests
         run: npm test
-
-      - name: Build and start docker compose stack
-        run: docker compose build
-
-      - name: Test functionnaly using Cucumber.js
-        run: npm run test-features
-
-      - name: Stop stack
-        run: docker compose down
