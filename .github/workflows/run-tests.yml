@@ -3,7 +3,7 @@ name: Test on CI
 on: [push, pull_request]
     
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -17,3 +17,4 @@ jobs:
 
       - name: Run unittests
         run: npm test
+
