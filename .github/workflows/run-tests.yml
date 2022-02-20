@@ -1,15 +1,7 @@
 name: Test on CI
 
-on:
-  push:
-    branches: 
-      - 'refs/head/*'
-
-    paths-ignore:
-      - '.github/**'
-      - .gitignore
-      - .dockerignore
-      - '*.md'
+on: [push, pull_request]
+    
 jobs:
   build:
     runs-on: ubuntu-latest
