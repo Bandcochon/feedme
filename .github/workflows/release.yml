@@ -2,6 +2,10 @@ name: Create release on tag
 
 on:
   workflow_dispatch:
+    workflows:
+      - "Test on CI"
+    types:
+      - success
   push:
     tags:
       - 'release-*'
