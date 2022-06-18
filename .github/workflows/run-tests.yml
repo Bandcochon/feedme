@@ -10,7 +10,7 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: '17.3.x'
+          node-version: '18.3.x'
 
       - name: Install packages
         run: npm install
@@ -18,12 +18,11 @@ jobs:
       - name: Run unittests
         run: npm test
 
-      - name: Start the stack
-        run: docker compose up -d
-
-      - name: Run features tests
-        run: npm run test-features
+      - name: Start the stack and run tests
+        run: |
+          docker-compose up -d
+          npm run test-features
 
       - name: Stop stack
         if: always()
-        run: docker compose down
+        run: docker-compose down
