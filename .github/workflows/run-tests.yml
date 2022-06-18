@@ -18,3 +18,12 @@ jobs:
       - name: Run unittests
         run: npm test
 
+      - name: Start the stack
+        run: docker compose up -d
+
+      - name: Run features tests
+        run: npm run test-features
+
+      - name: Stop stack
+        if: always()
+        run: docker compose down

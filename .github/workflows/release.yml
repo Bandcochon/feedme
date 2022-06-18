@@ -1,9 +1,10 @@
 name: Create release on tag
+description: Each time the release tag is created, we create a release branch, we build and push a docker image and deploy it onto the server
 
 on:
   push:
     tags:
-      - 'v*'
+      - 'release-*'
 
 jobs:
   build:
@@ -12,6 +13,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Get lastest git tag
+        run: |
+        latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+        echo "LATEST_TAG=${latest_tag}" >> $GITHUB_ENV
+
       - name: Build docker image
-        run: docker build -t registry.bandcochon.fr/bandcochon/feedme .
+        run: docker build -t registry.bandcochon.fr/bandcochon/feedme:${{ env.LASTEST_TAG }} .
 
