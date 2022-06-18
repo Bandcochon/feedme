@@ -17,16 +17,3 @@ jobs:
 
       - name: Run unittests
         run: npm test
-
-      - name: Start the stack and run tests
-        run: |
-          docker-compose up -d
-          npm run test-features
-
-      - name: Display logs on failure
-        if: failure()
-        run: docker compose logs mongo
-
-      - name: Stop stack
-        if: always()
-        run: docker-compose down
