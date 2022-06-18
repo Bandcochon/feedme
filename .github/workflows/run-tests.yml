@@ -22,7 +22,10 @@ jobs:
         run: |
           docker-compose up -d
           npm run test-features
-          docker compose logs mongo
+
+      - name: Display logs on failure
+        if: failure()
+        run: docker compose logs mongo
 
       - name: Stop stack
         if: always()
