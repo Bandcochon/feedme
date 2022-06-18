@@ -13,6 +13,9 @@ jobs:
   build:
     name: Create release
     runs-on: ubuntu-latest
+    env:
+      registry: 'registry.bandcochon.fr/bandcochon/feedme'
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -23,11 +26,11 @@ jobs:
           echo "LATEST_TAG=${latest_tag}" >> $GITHUB_ENV
 
       - name: Build docker image
-        run: docker build -t registry.bandcochon.fr/bandcochon/feedme:${{ env.LATEST_TAG }} .
+        run: docker build -t ${{ env.registry }}:${{ env.LATEST_TAG }} .
 
       - name: Register to the register
         run: docker login --username ${{ secrets.REGISTRY_LOGIN }} --password ${{ secrets.REGISTRY_PASSWORD }} registry.bandcochon.fr
 
       - name: Publish image
-        run: docker push
+        run: docker push ${{ env.registry }}:${{ env.LATEST_TAG }}
 
