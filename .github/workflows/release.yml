@@ -20,3 +20,9 @@ jobs:
       - name: Build docker image
         run: docker build -t registry.bandcochon.fr/bandcochon/feedme:${{ env.LATEST_TAG }} .
 
+      - name: Register to the register
+        run: docker login --username ${{ secrets.REGISTRY_LOGIN }} --password ${{ secrets.REGISTRY_PASSWORD }} registry.bandcochon.fr
+
+      - name: Publish image
+        run: docker push
+
