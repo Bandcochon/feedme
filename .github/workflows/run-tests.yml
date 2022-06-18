@@ -22,6 +22,7 @@ jobs:
         run: |
           docker-compose up -d
           npm run test-features
+          docker compose logs mongo
 
       - name: Stop stack
         if: always()
