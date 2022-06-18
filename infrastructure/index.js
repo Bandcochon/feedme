@@ -5,6 +5,7 @@ const {AlreadyExistsError} = require("../exceptions");
 const DefaultTimeout = 100;
 const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_PORT = process.env.DB_PORT || '27012';
+const DB_OPTIONS = process.env.DB_OPTIONS || '?keepAlive=true&poolSize=30&autoReconnect=true&socketTimeoutMS=360000&connectTimeoutMS=360000';
 
 class FeedService {
     #client;
@@ -15,7 +16,7 @@ class FeedService {
      * @returns {Promise<void>}
      */
     async connect() {
-        this.#client = await MongoClient.connect(`mongodb://${DB_HOST}:${DB_PORT}/feedme`, {
+        this.#client = await MongoClient.connect(`mongodb://${DB_HOST}:${DB_PORT}/feedme${DB_OPTIONS}`, {
             socketTimeoutMS: DefaultTimeout,
             serverSelectionTimeoutMS: DefaultTimeout,
             connectTimeoutMS: DefaultTimeout
